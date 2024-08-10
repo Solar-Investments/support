@@ -1,0 +1,11 @@
+name: analyze
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  analyze:
+    uses: Solar-Investments/.github/.github/workflows/analyze.yml@main

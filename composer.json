@@ -1,0 +1,66 @@
+{
+    "name": "solar-investments/support",
+    "description": "Support package for Solar Investments",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kyle Anderson",
+            "email": "kyle.anderson@fixr.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "guzzlehttp/guzzle": "^7.9",
+        "illuminate/support": "^11.0"
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.1.0",
+        "larastan/larastan": "^2.9.8",
+        "laravel/pint": "^1.17.2",
+        "nunomaduro/collision": "^8.4.0",
+        "orchestra/testbench": "^9.2.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "SolarInvestments\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SolarInvestments\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SolarInvestments\\ServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@artisan package:purge-skeleton --ansi",
+            "@artisan package:discover --ansi"
+        ],
+        "analyze": "@php vendor/bin/phpstan analyse --memory-limit=2G",
+        "artisan": "@php vendor/bin/testbench",
+        "cs-fix": "@php vendor/bin/pint",
+        "ide": [
+            "@artisan ide-helper:generate",
+            "@artisan ide-helper:meta"
+        ],
+        "test": "@artisan package:test",
+        "test-filter": "@test --filter",
+        "test-suite": [
+            "@analyze",
+            "@test"
+        ],
+        "tf": "@test-filter",
+        "ts": "@test-suite"
+    }
+}
