@@ -26,7 +26,7 @@ class RemoveTrailingSlash
             return redirect()->to(
                 path: URL::fromRequest(
                     request: $request,
-                    path: Str::rtrim($path, '/')
+                    path: rtrim($path, '/')
                 ),
                 status: Response::HTTP_MOVED_PERMANENTLY
             );
