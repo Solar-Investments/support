@@ -15,7 +15,7 @@ use SolarInvestments\Tests\TestCase;
 
 class SetFastlySurrogateKeyTest extends TestCase
 {
-    protected const string DEFAULT_KEY = '<DEFAULT>';
+    protected const DEFAULT_KEY = '<DEFAULT>';
 
     public static function surrogateKeys(): array
     {
