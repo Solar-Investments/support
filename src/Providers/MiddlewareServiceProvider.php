@@ -12,6 +12,14 @@ use SolarInvestments\Middleware;
 class MiddlewareServiceProvider extends ServiceProvider
 {
     /**
+     * @var array<int, string>
+     */
+    protected array $configs = [
+        'fastly',
+        'vpn',
+    ];
+
+    /**
      * @var array<int, class-string>
      */
     protected array $middleware = [
@@ -67,8 +75,10 @@ class MiddlewareServiceProvider extends ServiceProvider
 
     protected function registerConfig(): void
     {
-        $this->publishes([
-            __DIR__.'/../../config/vpn.php' => config_path('vpn.php'),
-        ], 'vpn-config');
+        foreach ($this->configs as $config) {
+            $this->publishes([
+                __DIR__."/../../config/$config.php" => config_path("$config.php"),
+            ], "$config-config");
+        }
     }
 }
