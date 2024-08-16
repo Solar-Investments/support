@@ -26,21 +26,26 @@ class SetFastlySurrogateKey
         $this->surrogateKeys()->each(function (array $surrogate) use ($request, $response): void {
             $ttl = now()->addMinutes(5);
 
-            $surrogateKey = Str::trim($surrogate['key']);
+            $surrogateKey = trim($surrogate['key']);
 
-            /** @var Collection<int, string> $surrogatePaths */
+            /** @var Collection<int, non-falsy-string> $surrogatePaths */
             $surrogatePaths = Cache::remember(
                 key: $this->cacheKeyForSurrogateKeyPaths($surrogateKey),
                 ttl: $ttl,
-                callback: static fn (): Collection => collect($surrogate['paths'])
-                    ->map(static fn (string $path): string => Str::of($path)
-                        ->trim()
-                        ->ltrim('/')
-                        ->lower()
-                        ->toString()
-                    )
-                    ->filter()
-                    ->unique()
+                callback: static function () use ($surrogate): Collection {
+                    /** @var Collection<int, string> $paths */
+                    $paths = collect($surrogate['paths'])
+                        ->map(static fn (string $path): string => Str::of($path)
+                            ->trim()
+                            ->ltrim('/')
+                            ->lower()
+                            ->toString()
+                        )
+                        ->filter()
+                        ->unique();
+
+                    return $paths;
+                }
             );
 
             /** @var string $surrogateKeys */
@@ -78,7 +83,7 @@ class SetFastlySurrogateKey
 
     public function defaultSurrogateKey(): string
     {
-        return Str::trim(config('fastly.default_surrogate_key'));
+        return trim(config('fastly.default_surrogate_key'));
     }
 
     public function cacheKeyForSurrogateKey(string $key): string

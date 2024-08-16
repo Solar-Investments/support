@@ -22,12 +22,10 @@ class MiddlewareServiceProviderTest extends TestCase
             $this->fail();
         }
 
-        $middleware = $kernel->getGlobalMiddleware();
-
-        $this->assertContains(Middleware\EnableSecurePaginationLinks::class, $middleware);
-        $this->assertContains(Middleware\HideFromRobotsOnOrigin::class, $middleware);
-        $this->assertContains(Middleware\LowerPathCasing::class, $middleware);
-        $this->assertContains(Middleware\RemoveTrailingSlash::class, $middleware);
+        $this->assertTrue($kernel->hasMiddleware(Middleware\EnableSecurePaginationLinks::class));
+        $this->assertTrue($kernel->hasMiddleware(Middleware\HideFromRobotsOnOrigin::class));
+        $this->assertTrue($kernel->hasMiddleware(Middleware\LowerPathCasing::class));
+        $this->assertTrue($kernel->hasMiddleware(Middleware\RemoveTrailingSlash::class));
     }
 
     #[Test]

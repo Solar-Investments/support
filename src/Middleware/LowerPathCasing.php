@@ -22,7 +22,7 @@ class LowerPathCasing
             return $next($request);
         }
 
-        if (Str::isMatch('/[A-Z]/', $path)) {
+        if (Str::of($path)->isMatch('/[A-Z]/')) {
             return redirect()->to(
                 path: URL::fromRequest(
                     request: $request,
