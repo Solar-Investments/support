@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SolarInvestments\Tests;
 
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Http;
 use Orchestra\Testbench\Concerns\WithWorkbench;
@@ -30,5 +31,12 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app): array
     {
         return [ServiceProvider::class];
+    }
+
+    protected function defineEnvironment($app): void
+    {
+        tap($app['config'], static function (Repository $config): void {
+            $config->set('cache.default', 'array');
+        });
     }
 }
