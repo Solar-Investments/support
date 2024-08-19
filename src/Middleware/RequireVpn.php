@@ -56,8 +56,12 @@ class RequireVpn
      */
     public function allowedIps(): array
     {
-        /** @var array|array<int, string>|string $values */
-        $values = config('vpn.ip_addresses') ?? [];
+        /** @var array|array<int, string>|string|null $values */
+        $values = config('vpn.ip_addresses');
+
+        if ($values === null) {
+            return ['*'];
+        }
 
         if (is_string($values)) {
             $values = Str::of($values)

@@ -27,8 +27,20 @@ class RequireVpnTest extends TestCase
     }
 
     #[Test]
+    public function it_can_allow_all_ips_when_not_configured(): void
+    {
+        $request = new Request();
+
+        $middleware = new RequireVpn();
+
+        $middleware->handle($request, fn () => $this->assertTrue(true));
+    }
+
+    #[Test]
     public function it_can_throw_an_exception_when_a_vpn_is_not_used(): void
     {
+        config()->set('vpn.ip_addresses', ['192.168.1.1']);
+
         $this->expectException(HttpException::class);
 
         $request = new Request();
@@ -78,7 +90,7 @@ class RequireVpnTest extends TestCase
         $middleware = new RequireVpn();
 
         config()->set('vpn.ip_addresses');
-        $this->assertSame([], $middleware->allowedIps());
+        $this->assertSame(['*'], $middleware->allowedIps());
 
         config()->set('vpn.ip_addresses', '');
         $this->assertSame([], $middleware->allowedIps());
