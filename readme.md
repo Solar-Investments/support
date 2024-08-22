@@ -1,5 +1,30 @@
 # Solar Investments Support
 
+[![Packagist](https://img.shields.io/packagist/v/solar-investments/support)](https://packagist.org/packages/solar-investments/support)
+![Tests](https://img.shields.io/github/actions/workflow/status/Solar-Investments/support/test.yml)
+![Dependencies](https://img.shields.io/librariesio/github/Solar-Investments/support)
+
+Support package for Solar Investments projects.
+
+---
+- [Installation](#installation)
+- [Middleware](#middleware)
+    - [Fastly Middleware](#fastly-middleware)
+    - [VPN Middleware](#vpn-middleware)
+---
+
+## Installation
+
+```bash
+composer require solar-investments/support
+```
+
+```bash
+php artisan vendor:publish --tag=vpn-config
+```
+
+## Middleware
+
 This package adds the following global middleware:
 
 - `SolarInvestments\Middleware\EnableSecurePaginationLinks`
@@ -14,14 +39,6 @@ The following middleware is added to the `web` middleware group:
 The following middleware is available for use:
 
 - `SolarInvestments\Middleware\SetFastlySurrogateKey`
-
-## Installation
-
-```bash
-composer require solar-investments/support
-```
-
-## Configuration
 
 ### Fastly Middleware
 
@@ -71,10 +88,10 @@ return [
 
 By default, this middleware is "disabled" and all IP addresses are allowed.
 
-To restrict access from specific IP addresses, set the `VPN_IP_ADDRESSES` environment variable in your `.env` file.
+To restrict access from specific IP addresses, set the `VPN_IP_ADDRESSES` environment variable in your `.env` file, e.g.:
 
-Alternatively, you can specify the IP addresses in the `config/vpn.php` file once you've published it:
-
-```bash
-php artisan vendor:publish --tag=vpn-config
+```dotenv
+VPN_IP_ADDRESSES=192.168.1.192,10.0.0.1/8
 ```
+
+Alternatively, you can specify the IP addresses in the `config/vpn.php` file.
