@@ -6,6 +6,7 @@ namespace SolarInvestments\Providers;
 
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\Request;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +26,14 @@ class MacroServiceProvider extends ServiceProvider
          */
         App::macro('host', fn (): string => Str::host(
             url: config('app.url')
+        ));
+
+        /**
+         * Determine if the application is running in a CI environment.
+         */
+        App::macro('runningCI', fn (): bool => (bool) Env::get(
+            key: 'CI',
+            default: false
         ));
 
         /**
