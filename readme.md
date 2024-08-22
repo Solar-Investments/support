@@ -11,6 +11,7 @@ Support package for Solar Investments projects.
 - [Middleware](#middleware)
     - [Fastly Middleware](#fastly-middleware)
     - [VPN Middleware](#vpn-middleware)
+- [Testing Traits](#testing-traits)
 ---
 
 ## Installation
@@ -95,3 +96,23 @@ VPN_IP_ADDRESSES=192.168.1.192,10.0.0.1/8
 ```
 
 Alternatively, you can specify the IP addresses in the `config/vpn.php` file.
+
+## Testing Traits
+
+### SkipTestWhenRunningCI
+
+This trait can be used to skip tests when running in a CI environment.
+
+```php
+use SolarInvestments\Testing\SkipTestWhenRunningCI;
+
+class ExampleTest extends TestCase
+{
+    use SkipTestWhenRunningCI;
+
+    public function test_example()
+    {
+        // ...
+    }
+}
+```
