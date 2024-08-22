@@ -41,12 +41,46 @@ class MacroServiceProviderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int, array<int, bool|int|string>>
+     */
+    public static function environmentData(): array
+    {
+        return [
+            [1, true],
+            [0, false],
+            ['1', true],
+            ['0', false],
+            [true, true],
+            [false, false],
+            ['true', true],
+            ['false', false],
+        ];
+    }
+
     #[Test, DataProvider('urlData')]
     public function it_can_get_the_app_host(string $url, string $expected): void
     {
         config()->set('app.url', $url);
 
         $this->assertSame($expected, App::host());
+    }
+
+    #[Test, DataProvider('environmentData')]
+    public function it_can_determine_if_the_app_is_running_in_ci(
+        bool|int|string $value,
+        bool $expected
+    ): void {
+        if (app()->runningCI()) {
+            $this->expectNotToPerformAssertions();
+
+            return;
+        }
+
+        $_SERVER['CI'] = $value;
+
+        $this->assertSame($expected, App::runningCI());
+        $this->assertSame($expected, app()->runningCI());
     }
 
     #[Test, DataProvider('urlData')]
