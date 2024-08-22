@@ -20,25 +20,15 @@ Support package for Solar Investments projects.
 composer require solar-investments/support
 ```
 
-```bash
-php artisan vendor:publish --tag=vpn-config
-```
-
 ## Middleware
 
-This package adds the following global middleware:
+The following middleware is available for use:
 
 - `SolarInvestments\Middleware\EnableSecurePaginationLinks`
 - `SolarInvestments\Middleware\HideFromRobotsOnOrigin`
 - `SolarInvestments\Middleware\LowerPathCasing`
 - `SolarInvestments\Middleware\RemoveTrailingSlash`
-
-The following middleware is added to the `web` middleware group:
-
 - `SolarInvestments\Middleware\RequireVpn`
-
-The following middleware is available for use:
-
 - `SolarInvestments\Middleware\SetFastlySurrogateKey`
 
 ### Fastly Middleware
@@ -86,6 +76,12 @@ return [
 ```
 
 ### VPN Middleware
+
+To use the `RequireVpn` middleware, publish the configuration file:
+
+```bash
+php artisan vendor:publish --tag=vpn-config
+```
 
 By default, this middleware is "disabled" and all IP addresses are allowed.
 
