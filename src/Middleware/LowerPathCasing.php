@@ -22,6 +22,10 @@ class LowerPathCasing
             return $next($request);
         }
 
+        if (Str::of($path)->isMatch($this->filePattern())) {
+            return $next($request);
+        }
+
         if (Str::of($path)->isMatch('/[A-Z]/')) {
             return redirect()->to(
                 path: URL::fromRequest(
@@ -33,5 +37,10 @@ class LowerPathCasing
         }
 
         return $next($request);
+    }
+
+    protected function filePattern(): string
+    {
+        return '/\.[a-z0-9]{2,4}(\?.*)?$/i';
     }
 }
