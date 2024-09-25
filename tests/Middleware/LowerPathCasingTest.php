@@ -41,6 +41,16 @@ class LowerPathCasingTest extends TestCase
         ];
     }
 
+    public static function statamicControlPanelData(): array
+    {
+        return [
+            ['http://localhost/cp/'],
+            ['http://localhost/cp/dashboard'],
+            ['http://localhost/cp/dashboard?foo=bar'],
+            ['http://localhost/cp/dashboard?foo=bar&baz=qux'],
+        ];
+    }
+
     #[Test, DataProvider('mixedCasePathData')]
     public function it_can_redirect_requests_with_mixed_casing(string $url, string $expected): void
     {
@@ -57,6 +67,20 @@ class LowerPathCasingTest extends TestCase
     #[Test, DataProvider('lowerCasePathData')]
     public function it_cannot_redirect_requests_with_lower_casing(string $url): void
     {
+        $request = Request::create($url);
+
+        $response = (new LowerPathCasing())
+            ->handle($request, fn (): Response => new Response());
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertFalse($response->isRedirect());
+    }
+
+    #[Test, DataProvider('statamicControlPanelData')]
+    public function it_can_skip_statamic_control_panel_paths(string $url): void
+    {
+        config()->set('statamic.cp.route', 'cp');
+
         $request = Request::create($url);
 
         $response = (new LowerPathCasing())

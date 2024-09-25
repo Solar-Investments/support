@@ -7,6 +7,7 @@ namespace SolarInvestments\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -22,6 +23,10 @@ class LowerPathCasing
             return $next($request);
         }
 
+        if ($this->pathIsForStatamicControlPanel($path)) {
+            return $next($request);
+        }
+
         if (Str::of($path)->isMatch('/[A-Z]/')) {
             return redirect()->to(
                 path: URL::fromRequest(
@@ -33,5 +38,21 @@ class LowerPathCasing
         }
 
         return $next($request);
+    }
+
+    protected function pathIsForStatamicControlPanel(string $path): bool
+    {
+        if (($cp = $this->statamicControlPanelPath()) === null) {
+            return false;
+        }
+
+        return Str::startsWith($path, $cp);
+    }
+
+    protected function statamicControlPanelPath(): ?string
+    {
+        $route = Route::statamicControlPanel();
+
+        return $route !== null ? sprintf('/%s/', $route) : null;
     }
 }
