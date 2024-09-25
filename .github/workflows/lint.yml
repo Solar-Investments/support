@@ -3,6 +3,8 @@ name: lint
 on:
   push:
     branches:
+      - 2.x
+      - 1.x
       - main
 
 permissions:
