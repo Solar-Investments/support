@@ -3,6 +3,8 @@ name: analyze
 on:
   push:
     branches:
+      - 2.x
+      - 1.x
       - main
   pull_request:
 
