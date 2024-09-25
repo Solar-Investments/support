@@ -42,7 +42,7 @@ This middleware fixes an issue where the `next` and `prev` links in the paginati
 
 ### Hide From Robots On Origin
 
-This middleware adds the `X-Robots-Tag` header to the response with the value `none` (sme as `noindex, nofollow`) to prevent search engines from indexing the page. This is only done when the site is accessed directly on the origin server, e.g. `http://origin.example.com` instead of `http://www.example.com`.
+This middleware adds the `X-Robots-Tag` header to the response with the value `none` (same as `noindex, nofollow`) to prevent search engines from indexing the page. This is only done when the site is accessed directly on the origin server, e.g. `http://origin.example.com` instead of `http://www.example.com`.
 
 ### Lower Path Casing
 
