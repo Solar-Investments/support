@@ -46,6 +46,8 @@ This middleware adds the `X-Robots-Tag` header to the response with the value `n
 
 ### Lower Path Casing
 
+> If [Statamic](https://statamic.dev) is installed, control panel paths are not converted to lowercase.
+
 This middleware converts the path of the request to lowercase.
 
 ### Remove Trailing Slash
