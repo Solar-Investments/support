@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -35,6 +36,16 @@ class MacroServiceProvider extends ServiceProvider
             key: 'CI',
             default: false
         ));
+
+        /**
+         * Get the Statamic control panel route.
+         */
+        Route::macro('statamicControlPanel', function (): ?string {
+            /** @var string|null $value */
+            $value = config('statamic.cp.route');
+
+            return $value !== null ? Str::trim($value, '/') : null;
+        });
 
         /**
          * Get the hostname from the given URL.

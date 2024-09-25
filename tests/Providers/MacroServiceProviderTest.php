@@ -6,6 +6,7 @@ namespace SolarInvestments\Tests\Providers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -58,6 +59,20 @@ class MacroServiceProviderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int, array<int, string|null>>
+     */
+    public static function statamicControlPanelData(): array
+    {
+        return [
+            [null, null],
+            ['cp', 'cp'],
+            ['/cp', 'cp'],
+            ['cp/', 'cp'],
+            ['/cp/', 'cp'],
+        ];
+    }
+
     #[Test, DataProvider('urlData')]
     public function it_can_get_the_app_host(string $url, string $expected): void
     {
@@ -81,6 +96,16 @@ class MacroServiceProviderTest extends TestCase
 
         $this->assertSame($expected, App::runningCI());
         $this->assertSame($expected, app()->runningCI());
+    }
+
+    #[Test, DataProvider('statamicControlPanelData')]
+    public function it_can_get_the_statamic_control_panel_route(?string $route, ?string $expected): void
+    {
+        if ($route !== null) {
+            config()->set('statamic.cp.route', $route);
+        }
+
+        $this->assertSame($expected, Route::statamicControlPanel());
     }
 
     #[Test, DataProvider('urlData')]
