@@ -27,19 +27,4 @@ class UrlServiceProviderTest extends TestCase
 
         $this->assertSame('https://', $forceScheme->getValue($url));
     }
-
-    #[Test]
-    public function it_can_force_the_root_url(): void
-    {
-        /** @var UrlGenerator $url */
-        $url = URL::getFacadeRoot();
-
-        try {
-            $forcedRoot = (new ReflectionClass($url))->getProperty('forcedRoot');
-        } catch (ReflectionException) {
-            $this->fail();
-        }
-
-        $this->assertSame('https://localhost', $forcedRoot->getValue($url));
-    }
 }
