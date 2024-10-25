@@ -12,7 +12,6 @@ class HideFromRobotsOnOrigin
 {
     /**
      * @noinspection PhpMixedReturnTypeCanBeReducedInspection
-     * @noinspection UnknownInspectionInspection
      */
     public function handle(Request $request, Closure $next): mixed
     {
