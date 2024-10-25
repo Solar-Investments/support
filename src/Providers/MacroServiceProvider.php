@@ -18,7 +18,6 @@ class MacroServiceProvider extends ServiceProvider
 {
     /**
      * @noinspection StaticClosureCanBeUsedInspection
-     * @noinspection UnknownInspectionInspection
      */
     public function register(): void
     {
