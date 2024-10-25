@@ -43,7 +43,7 @@ class MacroServiceProvider extends ServiceProvider
             /** @var string|null $value */
             $value = config('statamic.cp.route');
 
-            return $value !== null ? Str::trim($value, '/') : null;
+            return $value !== null ? trim($value, '/') : null;
         });
 
         /**
