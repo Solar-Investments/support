@@ -13,6 +13,7 @@ Support package for Solar Investments projects.
     - [Force Root URL](#force-root-url)
     - [Hide From Robots On Origin](#hide-from-robots-on-origin)
     - [Lower Path Casing](#lower-path-casing)
+    - [Redirect Consumer Validation Requests](#redirect-consumer-validation-requests)
     - [Remove Trailing Slash](#remove-trailing-slash)
     - [Require VPN](#require-vpn)
     - [Set Fastly Surrogate Key](#set-fastly-surrogate-key)
@@ -34,6 +35,7 @@ You can [register](https://laravel.com/docs/11.x/middleware#registering-middlewa
 - `SolarInvestments\Middleware\ForceRootUrl`
 - `SolarInvestments\Middleware\HideFromRobotsOnOrigin`
 - `SolarInvestments\Middleware\LowerPathCasing`
+- `SolarInvestments\Middleware\RedirectConsumerValidationRequests`
 - `SolarInvestments\Middleware\RemoveTrailingSlash`
 - `SolarInvestments\Middleware\RequireVpn`
 - `SolarInvestments\Middleware\SetFastlySurrogateKey`
@@ -59,6 +61,16 @@ This middleware adds the `X-Robots-Tag` header to the response with the value `n
 > If [Statamic](https://statamic.dev) is installed, control panel paths are not converted to lowercase.
 
 This middleware converts the path of the request to lowercase.
+
+### Redirect Consumer Validation Requests
+
+This middleware redirects requests for `/consumer-validation/v2/*` to a matching path on `www.fixr.com`.
+
+| Request URL                                   | Redirects To                                                      |
+|-----------------------------------------------|-------------------------------------------------------------------|
+| `/consumer-validation/v2/abc123?campaign=xyz` | `https://www.fixr.com/consumer-validation/v2/abc123?campaign=xyz` |
+
+This is used in marketing emails to ensure that tracking links match the sender domain but ultimately redirect to a centralized validation handler.
 
 ### Remove Trailing Slash
 
