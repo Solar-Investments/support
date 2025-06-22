@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolarInvestments\Tests\Middleware;
 
 use Illuminate\Http\Request;
+use Orchestra\Testbench\Attributes\DefineEnvironment;
 use PHPUnit\Framework\Attributes\Test;
 use SolarInvestments\Middleware\EnableSecurePaginationLinks;
 use SolarInvestments\Tests\TestCase;
@@ -24,10 +25,9 @@ class EnableSecurePaginationLinksTest extends TestCase
     }
 
     #[Test]
+    #[DefineEnvironment('local')]
     public function it_cannot_handle_requests_when_running_locally(): void
     {
-        $this->app['env'] = 'local';
-
         $request = new Request();
 
         $middleware = new EnableSecurePaginationLinks();
