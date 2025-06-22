@@ -43,4 +43,9 @@ abstract class TestCase extends BaseTestCase
             $config->set('session.driver', 'array');
         });
     }
+
+    protected function local(Application $app): void
+    {
+        $app['env'] = 'local';
+    }
 }
