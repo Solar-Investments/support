@@ -48,4 +48,9 @@ abstract class TestCase extends BaseTestCase
     {
         $app['env'] = 'local';
     }
+
+    protected function production(Application $app): void
+    {
+        $app['env'] = 'production';
+    }
 }
