@@ -36,7 +36,11 @@ abstract class TestCase extends BaseTestCase
     protected function defineEnvironment($app): void
     {
         tap($app['config'], static function (Repository $config): void {
+            $config->set('app.maintenance.driver', 'file');
             $config->set('cache.default', 'array');
+            $config->set('mail.default', 'array');
+            $config->set('queue.default', 'sync');
+            $config->set('session.driver', 'array');
         });
     }
 }
