@@ -25,6 +25,15 @@ abstract class TestCase extends BaseTestCase
         Http::preventStrayRequests();
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Cleanup...
+        putenv('FORCE_REDIS_CLUSTER');
+        putenv('GCP_PROJECT_ID');
+    }
+
     /**
      * @param  Application  $app
      */
@@ -52,5 +61,20 @@ abstract class TestCase extends BaseTestCase
     protected function production(Application $app): void
     {
         $app['env'] = 'production';
+    }
+
+    protected function forcesRedisCluster(): void
+    {
+        putenv('FORCE_REDIS_CLUSTER=true');
+    }
+
+    protected function usesDefaultProjectId(): void
+    {
+        putenv('GCP_PROJECT_ID=helio-platform');
+    }
+
+    protected function usesNonDefaultProjectId(): void
+    {
+        putenv('GCP_PROJECT_ID=not-helio-platform');
     }
 }
