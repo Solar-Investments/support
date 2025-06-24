@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use function in_array;
 use function is_string;
 
 class RequireVpn
@@ -30,25 +29,27 @@ class RequireVpn
 
     public function isUsingVpn(Request $request): bool
     {
-        if (($ips = $this->allowedIps()) === []) {
+        if (($allowedIps = $this->allowedIps()) === []) {
             return false;
         }
 
-        if ($ips === ['*']) {
+        if ($allowedIps === ['*']) {
             return true;
         }
 
-        if (($clientIp = $request->ip()) === null) {
-            return false;
-        }
-
-        foreach ($ips as $ip) {
-            if (Str::contains($ip, '/') && $this->ipWithinCidr($ip, $clientIp)) {
-                return true;
+        foreach ($request->ips() as $clientIp) {
+            foreach ($allowedIps as $allowedIp) {
+                if (Str::contains($allowedIp, '/')) {
+                    if ($this->ipWithinCidr($allowedIp, $clientIp)) {
+                        return true;
+                    }
+                } elseif ($clientIp === $allowedIp) {
+                    return true;
+                }
             }
         }
 
-        return in_array($clientIp, $ips, strict: true);
+        return false;
     }
 
     /**

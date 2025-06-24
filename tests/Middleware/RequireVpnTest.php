@@ -133,4 +133,38 @@ class RequireVpnTest extends TestCase
 
         $this->assertFalse($middleware->ipWithinCidr("$network/32", $ip));
     }
+
+    #[Test]
+    public function it_can_allow_when_any_forwarded_ip_matches_cidr(): void
+    {
+        $request = new Request();
+
+        $request->server->set('REMOTE_ADDR', '203.0.113.1');
+        $request->headers->set('X-Forwarded-For', '203.0.113.1, 10.1.2.3');
+
+        Request::setTrustedProxies(
+            proxies: ['203.0.113.1'],
+            trustedHeaderSet: Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PROTO |
+            Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT
+        );
+
+        $middleware = new RequireVpn();
+
+        config()->set('vpn.ip_addresses', ['10.0.0.0/8']);
+        $this->assertTrue($middleware->isUsingVpn($request));
+    }
+
+    #[Test]
+    public function it_cannot_allow_when_no_forwarded_ips_match(): void
+    {
+        $request = new Request();
+
+        $request->server->set('REMOTE_ADDR', '198.51.100.1');
+        $request->headers->set('X-Forwarded-For', '198.51.100.1, 203.0.113.2');
+
+        $middleware = new RequireVpn();
+
+        config()->set('vpn.ip_addresses', ['10.0.0.0/8']);
+        $this->assertFalse($middleware->isUsingVpn($request));
+    }
 }
