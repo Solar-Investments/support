@@ -7,6 +7,9 @@ namespace SolarInvestments\Services;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Bootstrap\HandleExceptions;
 use Illuminate\Foundation\Bootstrap\LoadConfiguration;
+use Monolog\Formatter\GoogleCloudLoggingFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 class Helio
 {
@@ -22,9 +25,32 @@ class Helio
                 //
             },
             HandleExceptions::class => static function () use ($app): void {
-                //
+                static::configureLogging($app);
             },
             default => static fn () => true,
         })();
+    }
+
+    public static function configureLogging(Application $app): void
+    {
+        if ($app->isLocal()) {
+            return;
+        }
+
+        $app['config']->set('logging.default', 'stderr');
+
+        $app['config']->set('logging.channels.stderr', [
+            'driver' => 'monolog',
+            'level' => $app->isProduction() ? 'warning' : 'debug',
+            'handler' => StreamHandler::class,
+            'handler_with' => [
+                'stream' => 'php://stderr',
+            ],
+            'formatter' => GoogleCloudLoggingFormatter::class,
+            'formatter_with' => [
+                'includeStacktraces' => true,
+            ],
+            'processors' => [PsrLogMessageProcessor::class],
+        ]);
     }
 }
