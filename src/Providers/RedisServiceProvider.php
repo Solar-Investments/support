@@ -56,6 +56,13 @@ class RedisServiceProvider extends ServiceProvider
 
     public function shouldEnableClusters(): bool
     {
+        if (
+            class_exists('Laravel\\Horizon\\Horizon') ||
+            class_exists('Laravel\\Horizon\\HorizonApplicationServiceProvider')
+        ) {
+            return false;
+        }
+
         if (Env::get('FORCE_REDIS_CLUSTER', false)) {
             return true;
         }
