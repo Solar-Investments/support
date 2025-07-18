@@ -18,6 +18,7 @@ Support package for Solar Investments projects.
     - [Require VPN](#require-vpn)
     - [Set Fastly Surrogate Key](#set-fastly-surrogate-key)
 - [Service Providers](#service-providers)
+    - [HelioServiceProvider](#helioserviceprovider)
     - [RedisServiceProvider](#redisserviceprovider)
 - [URLs](#urls)
 - [Testing Traits](#testing-traits)
@@ -145,6 +146,10 @@ return [
 ```
 
 ## Service Providers
+
+### HelioServiceProvider
+
+This provider conditionally bootstraps Helio-specific configuration.
 
 ### RedisServiceProvider
 

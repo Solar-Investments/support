@@ -10,6 +10,7 @@ class ServiceProvider extends BaseServiceProvider
 {
     public function register(): void
     {
+        $this->app->register(Providers\HelioServiceProvider::class);
         $this->app->register(Providers\MacroServiceProvider::class);
         $this->app->register(Providers\MiddlewareServiceProvider::class);
         $this->app->register(Providers\RedisServiceProvider::class);
