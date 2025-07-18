@@ -8,6 +8,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Bootstrap\HandleExceptions;
 use Illuminate\Foundation\Bootstrap\LoadConfiguration;
+use Illuminate\Support\Env;
 use Monolog\Formatter\GoogleCloudLoggingFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
@@ -23,7 +24,7 @@ class Helio
     {
         (match ($bootstrapper) {
             LoadConfiguration::class => static function () use ($app): void {
-                //
+                static::configureStatamic($app);
             },
             HandleExceptions::class => static function () use ($app): void {
                 static::configureLogging($app);
@@ -55,6 +56,31 @@ class Helio
                 'includeStacktraces' => true,
             ],
             'processors' => [PsrLogMessageProcessor::class],
+        ]);
+    }
+
+    public static function configureStatamic(Application $app): void
+    {
+        /** @var Repository $config */
+        $config = $app['config'];
+
+        $name = Env::get('STATAMIC_GIT_USER_NAME', '{{ name }}');
+        $email = Env::get('STATAMIC_GIT_USER_EMAIL', '{{ email }}');
+        $project = Env::get('GCP_PROJECT_ID', 'helio-platform');
+
+        $config->set('statamic.git.commands', [
+            '{{ git }} add {{ paths }}',
+            collect([
+                '{{ git }}',
+                '-c user.name="'.$name.'"',
+                '-c user.email="'.$email.'"',
+                'commit',
+                '-m "[skip ci] {{ message }}"',
+                '-m "environment='.$app['env'].'"',
+                '-m "project='.$project.'"',
+                '-m "user.email={{ email }}"',
+                '-m "user.name={{ name }}"',
+            ])->implode(' '),
         ]);
     }
 }
