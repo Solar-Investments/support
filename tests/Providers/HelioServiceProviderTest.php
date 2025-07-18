@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolarInvestments\Tests\Providers;
 
 use Illuminate\Foundation\Bootstrap\HandleExceptions;
+use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 use Monolog\Formatter\GoogleCloudLoggingFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
@@ -49,5 +50,23 @@ class HelioServiceProviderTest extends TestCase
         Helio::bootstrapperBootstrapped($this->app, HandleExceptions::class);
 
         $this->assertSame('debug', config('logging.channels.stderr.level'));
+    }
+
+    #[Test]
+    public function it_can_configure_statamic(): void
+    {
+        Helio::bootstrapperBootstrapped($this->app, LoadConfiguration::class);
+
+        $commands = config('statamic.git.commands');
+
+        $this->assertIsArray($commands);
+        $this->assertCount(2, $commands);
+        $this->assertSame('{{ git }} add {{ paths }}', $commands[0]);
+        $this->assertStringContainsString('-c user.name="{{ name }}"', $commands[1]);
+        $this->assertStringContainsString('-c user.email="{{ email }}"', $commands[1]);
+        $this->assertStringContainsString('-m "environment=testing"', $commands[1]);
+        $this->assertStringContainsString('-m "project=helio-platform"', $commands[1]);
+        $this->assertStringContainsString('-m "user.email={{ email }}"', $commands[1]);
+        $this->assertStringContainsString('-m "user.name={{ name }}"', $commands[1]);
     }
 }

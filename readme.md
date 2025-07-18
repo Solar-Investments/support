@@ -157,6 +157,10 @@ It listens for Laravel's internal bootstrap events and applies environment-aware
 
 Replaces the default log channel with a `stderr` Monolog driver using `GoogleCloudLoggingFormatter` and dynamic log levels (`debug` in non-production, `warning` in production).
 
+#### Statamic
+
+If Statamic is installed, it injects environment-aware `git` commit commands for Statamic's content publishing pipeline. This includes metadata like the current environment, project, and git user/email.
+
 ### RedisServiceProvider
 
 This provider modifies the `database.redis` configuration at runtime to enable Redis clustering automatically in production only **when running on Helio-managed projects**.
