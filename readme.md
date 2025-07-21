@@ -19,7 +19,6 @@ Support package for Solar Investments projects.
     - [Set Fastly Surrogate Key](#set-fastly-surrogate-key)
 - [Service Providers](#service-providers)
     - [HelioServiceProvider](#helioserviceprovider)
-    - [RedisServiceProvider](#redisserviceprovider)
 - [URLs](#urls)
 - [Testing Traits](#testing-traits)
 ---
@@ -160,25 +159,6 @@ Replaces the default log channel with a `stderr` Monolog driver using `GoogleClo
 #### Statamic
 
 If Statamic is installed, it injects environment-aware `git` commit commands for Statamic's content publishing pipeline. This includes metadata like the current environment, project, and git user/email.
-
-### RedisServiceProvider
-
-This provider modifies the `database.redis` configuration at runtime to enable Redis clustering automatically in production only **when running on Helio-managed projects**.
-
-Cluster mode is enabled only when **all** the following are true:
-
-- `APP_ENV` is `production`
-- `GCP_PROJECT_ID` is **not set** or equals `helio-platform`
-- `.env.production.encrypted` exists
-- `.github/workflows/helio.yml` exists
-
-If these conditions are met, Redis stores such as `default` and `cache` are moved into the `clusters` key to [enable Redis cluster support in Laravel](https://laravel.com/docs/12.x/redis#clusters).
-
-To force cluster mode in any environment:
-
-```dotenv
-FORCE_REDIS_CLUSTER=true
-```
 
 ## URLs
 
