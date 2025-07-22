@@ -12,7 +12,6 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->app->register(Providers\MacroServiceProvider::class);
         $this->app->register(Providers\MiddlewareServiceProvider::class);
-        $this->app->register(Providers\RedisServiceProvider::class);
         $this->app->register(Providers\UrlServiceProvider::class);
     }
 }
