@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SolarInvestments\Tests\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Orchestra\Testbench\Attributes\DefineEnvironment;
 use PHPUnit\Framework\Attributes\Test;
 use SolarInvestments\Middleware\RequireVpn;
@@ -184,5 +185,49 @@ class RequireVpnTest extends TestCase
 
         config()->set('vpn.ip_addresses', ['10.0.0.0/8']);
         $this->assertFalse($middleware->isUsingVpn($request));
+    }
+
+    #[Test]
+    public function it_can_allow_requests_to_health_path(): void
+    {
+        $middleware = new RequireVpn();
+
+        $request = Request::create('/up');
+
+        $request->server->set('REMOTE_ADDR', '198.51.100.1');
+
+        config()->set('vpn.ip_addresses', ['10.0.0.0/8']);
+
+        $called = false;
+
+        $middleware->handle($request, function () use (&$called): void {
+            $called = true;
+        });
+
+        $this->assertTrue($called);
+    }
+
+    #[Test]
+    public function it_can_allow_requests_to_named_probes_route(): void
+    {
+        $middleware = new RequireVpn();
+
+        $request = new Request();
+
+        $request->server->set('REMOTE_ADDR', '198.51.100.1');
+
+        $request->setRouteResolver(fn () => (new Route('GET', '/probes/test', [
+            'as' => 'probes.test',
+        ])));
+
+        config()->set('vpn.ip_addresses', ['10.0.0.0/8']);
+
+        $called = false;
+
+        $middleware->handle($request, function () use (&$called): void {
+            $called = true;
+        });
+
+        $this->assertTrue($called);
     }
 }
