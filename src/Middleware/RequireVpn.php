@@ -22,6 +22,10 @@ class RequireVpn
             return $next($request);
         }
 
+        if ($request->routeIs('probes.*') || $request->is('up')) {
+            return $next($request);
+        }
+
         abort_unless($this->isUsingVpn($request), Response::HTTP_FORBIDDEN);
 
         return $next($request);
