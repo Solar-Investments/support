@@ -24,7 +24,13 @@ class RequireVpnTest extends TestCase
 
         $middleware = new RequireVpn();
 
-        $middleware->handle($request, fn () => $this->assertTrue(true));
+        $called = false;
+
+        $middleware->handle($request, function () use (&$called): void {
+            $called = true;
+        });
+
+        $this->assertTrue($called);
     }
 
     #[Test]
@@ -34,7 +40,13 @@ class RequireVpnTest extends TestCase
 
         $middleware = new RequireVpn();
 
-        $middleware->handle($request, fn () => $this->assertTrue(true));
+        $called = false;
+
+        $middleware->handle($request, function () use (&$called): void {
+            $called = true;
+        });
+
+        $this->assertTrue($called);
     }
 
     #[Test]
@@ -59,7 +71,13 @@ class RequireVpnTest extends TestCase
 
         $middleware = new RequireVpn();
 
-        $middleware->handle($request, fn () => $this->assertTrue(true));
+        $called = false;
+
+        $middleware->handle($request, function () use (&$called): void {
+            $called = true;
+        });
+
+        $this->assertTrue($called);
     }
 
     #[Test]
