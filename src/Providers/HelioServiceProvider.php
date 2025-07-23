@@ -6,7 +6,6 @@ namespace SolarInvestments\Providers;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use SolarInvestments\Services\Helio;
 
 class HelioServiceProvider extends ServiceProvider
@@ -17,20 +16,9 @@ class HelioServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->app['events']->listen(
-            'bootstrapping: *',
-            fn (string $bootstrapper) => Helio::bootstrapperBootstrapping(
-                $this->app,
-                bootstrapper: Str::after($bootstrapper, 'bootstrapping: ')
-            )
-        );
-
-        $this->app['events']->listen(
-            'bootstrapped: *',
-            fn (string $bootstrapper) => Helio::bootstrapperBootstrapped(
-                $this->app,
-                Str::after($bootstrapper, 'bootstrapped: ')
-            )
-        );
+        if (! $this->app->configurationIsCached()) {
+            Helio::configureLogging($this->app);
+            Helio::configureStatamic($this->app);
+        }
     }
 }

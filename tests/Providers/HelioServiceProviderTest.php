@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace SolarInvestments\Tests\Providers;
 
-use Illuminate\Foundation\Bootstrap\HandleExceptions;
-use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 use Monolog\Formatter\GoogleCloudLoggingFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
@@ -19,7 +17,7 @@ class HelioServiceProviderTest extends TestCase
     #[Test]
     public function it_can_configure_logging(): void
     {
-        Helio::bootstrapperBootstrapped($this->app, HandleExceptions::class);
+        Helio::configureLogging($this->app);
 
         $this->assertSame('stderr', config('logging.default'));
 
@@ -38,7 +36,7 @@ class HelioServiceProviderTest extends TestCase
     #[DefineEnvironment('production')]
     public function it_can_set_the_logging_level_to_warning_when_in_production(): void
     {
-        Helio::bootstrapperBootstrapped($this->app, HandleExceptions::class);
+        Helio::configureLogging($this->app);
 
         $this->assertSame('warning', config('logging.channels.stderr.level'));
     }
@@ -47,7 +45,7 @@ class HelioServiceProviderTest extends TestCase
     #[DefineEnvironment('local')]
     public function it_can_set_the_logging_level_to_debug_when_not_in_production(): void
     {
-        Helio::bootstrapperBootstrapped($this->app, HandleExceptions::class);
+        Helio::configureLogging($this->app);
 
         $this->assertSame('debug', config('logging.channels.stderr.level'));
     }
@@ -55,7 +53,7 @@ class HelioServiceProviderTest extends TestCase
     #[Test]
     public function it_can_configure_statamic(): void
     {
-        Helio::bootstrapperBootstrapped($this->app, LoadConfiguration::class);
+        Helio::configureStatamic($this->app);
 
         $commands = config('statamic.git.commands');
 
