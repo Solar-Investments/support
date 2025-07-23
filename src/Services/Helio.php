@@ -6,8 +6,6 @@ namespace SolarInvestments\Services;
 
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Foundation\Bootstrap\HandleExceptions;
-use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 use Illuminate\Support\Env;
 use Monolog\Formatter\GoogleCloudLoggingFormatter;
 use Monolog\Handler\StreamHandler;
@@ -15,24 +13,6 @@ use Monolog\Processor\PsrLogMessageProcessor;
 
 class Helio
 {
-    public static function bootstrapperBootstrapping(Application $app, string $bootstrapper): void
-    {
-        //
-    }
-
-    public static function bootstrapperBootstrapped(Application $app, string $bootstrapper): void
-    {
-        (match ($bootstrapper) {
-            LoadConfiguration::class => static function () use ($app): void {
-                static::configureStatamic($app);
-            },
-            HandleExceptions::class => static function () use ($app): void {
-                static::configureLogging($app);
-            },
-            default => static fn () => true,
-        })();
-    }
-
     public static function configureLogging(Application $app): void
     {
         if ($app->isLocal()) {
