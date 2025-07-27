@@ -11,8 +11,6 @@ Route::prefix('probes')->name('probes.')->group(function (): void {
 
     Route::prefix('liveness')->name('liveness.')->group(function (): void {
         Route::get('/backend', [ProbeController::class, 'livenessBackend'])->name('backend');
-        Route::get('/cache', [ProbeController::class, 'livenessCache'])->name('cache');
-        Route::get('/database', [ProbeController::class, 'livenessDatabase'])->name('database');
         Route::get('/scheduler', [ProbeController::class, 'livenessScheduler'])->name('scheduler');
         Route::get('/worker', [ProbeController::class, 'livenessWorker'])->name('worker');
     });
