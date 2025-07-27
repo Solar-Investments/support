@@ -6,8 +6,6 @@ namespace SolarInvestments\Http\Controllers;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use SolarInvestments\Models\Heartbeat;
 use Throwable;
 
@@ -17,8 +15,6 @@ class ProbeController
     {
         $services = [
             'backend' => fn (): Response => $this->livenessBackend(),
-            'cache' => fn (): Response => $this->livenessCache(),
-            'database' => fn (): Response => $this->livenessDatabase(),
         ];
 
         $errors = collect();
@@ -44,44 +40,6 @@ class ProbeController
     public function livenessBackend(): ResponseFactory|Response
     {
         return response('Backend service is running');
-    }
-
-    public function livenessCache(): ResponseFactory|Response
-    {
-        try {
-            Cache::put(
-                key: $key = 'probe:liveness:cache',
-                value: $value = 'OK',
-                ttl: now()->addMinutes(5)
-            );
-
-            $actual = Cache::get($key);
-
-            Cache::forget($key);
-
-            throw_unless($value === $actual);
-        } catch (Throwable) {
-            return response(
-                'Cache connection failed',
-                Response::HTTP_SERVICE_UNAVAILABLE
-            );
-        }
-
-        return response('Cache connection successful');
-    }
-
-    public function livenessDatabase(): ResponseFactory|Response
-    {
-        try {
-            DB::connection()->getPdo();
-        } catch (Throwable) {
-            return response(
-                'Database connection failed',
-                Response::HTTP_SERVICE_UNAVAILABLE
-            );
-        }
-
-        return response('Database connection successful');
     }
 
     public function livenessScheduler(): ResponseFactory|Response

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace SolarInvestments\Tests\Http\Controllers;
 
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
 use SolarInvestments\Enums\HeartbeatType;
 use SolarInvestments\Http\Controllers\ProbeController;
@@ -22,12 +19,6 @@ class ProbeControllerTest extends TestCase
     #[Test]
     public function liveness_success(): void
     {
-        Cache::shouldReceive('put')->once()->andReturnTrue();
-        Cache::shouldReceive('get')->once()->andReturn('OK');
-        Cache::shouldReceive('forget')->once();
-
-        DB::shouldReceive('connection->getPdo')->once();
-
         $response = $this->get(route('probes.liveness'));
 
         $response->assertOk();
@@ -53,16 +44,6 @@ class ProbeControllerTest extends TestCase
                 {
                     return response('Backend failure', Response::HTTP_SERVICE_UNAVAILABLE);
                 }
-
-                public function livenessCache(): Response
-                {
-                    return response('Cache OK');
-                }
-
-                public function livenessDatabase(): Response
-                {
-                    return response('Database OK');
-                }
             };
         });
 
@@ -70,64 +51,6 @@ class ProbeControllerTest extends TestCase
 
         $response->assertServerError();
         $response->assertSeeText('Liveness failures: backend');
-    }
-
-    #[Test]
-    public function liveness_cache_failure(): void
-    {
-        Cache::shouldReceive('put')->andThrow(Exception::class);
-
-        $response = $this->get(route('probes.liveness'));
-
-        $response->assertServerError();
-        $response->assertSeeText('Liveness failures: cache');
-    }
-
-    #[Test]
-    public function liveness_database_failure(): void
-    {
-        Cache::shouldReceive('put')->once()->andReturnTrue();
-        Cache::shouldReceive('get')->once()->andReturn('OK');
-        Cache::shouldReceive('forget')->once();
-
-        DB::shouldReceive('connection->getPdo')->andThrow(Exception::class);
-
-        $response = $this->get(route('probes.liveness'));
-
-        $response->assertServerError();
-        $response->assertSeeText('Liveness failures: database');
-    }
-
-    #[Test]
-    public function liveness_backend_cache_database_failure(): void
-    {
-        Cache::shouldReceive('put')->andThrow(Exception::class);
-        DB::shouldReceive('connection->getPdo')->andThrow(Exception::class);
-
-        $this->app->bind(ProbeController::class, function () {
-            return new class() extends ProbeController
-            {
-                public function livenessBackend(): Response
-                {
-                    return response('Backend failure', Response::HTTP_SERVICE_UNAVAILABLE);
-                }
-
-                public function livenessCache(): Response
-                {
-                    return response('Cache failure', Response::HTTP_SERVICE_UNAVAILABLE);
-                }
-
-                public function livenessDatabase(): Response
-                {
-                    return response('Database failure', Response::HTTP_SERVICE_UNAVAILABLE);
-                }
-            };
-        });
-
-        $response = $this->get(route('probes.liveness'));
-
-        $response->assertServerError();
-        $response->assertSeeText('Liveness failures: backend, cache, database');
     }
 
     #[Test]
