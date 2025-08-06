@@ -58,14 +58,13 @@ class HelioServiceProviderTest extends TestCase
         $commands = config('statamic.git.commands');
 
         $this->assertIsArray($commands);
-        $this->assertCount(3, $commands);
-        $this->assertSame('{{ git }} pull', $commands[0]);
-        $this->assertSame('{{ git }} add {{ paths }}', $commands[1]);
-        $this->assertStringContainsString('-c user.name="{{ name }}"', $commands[2]);
-        $this->assertStringContainsString('-c user.email="{{ email }}"', $commands[2]);
-        $this->assertStringContainsString('-m "environment=testing"', $commands[2]);
-        $this->assertStringContainsString('-m "project=helio-platform"', $commands[2]);
-        $this->assertStringContainsString('-m "user.email={{ email }}"', $commands[2]);
-        $this->assertStringContainsString('-m "user.name={{ name }}"', $commands[2]);
+        $this->assertCount(2, $commands);
+        $this->assertSame('{{ git }} add {{ paths }}', $commands[0]);
+        $this->assertStringContainsString('-c user.name="{{ name }}"', $commands[1]);
+        $this->assertStringContainsString('-c user.email="{{ email }}"', $commands[1]);
+        $this->assertStringContainsString('-m "environment=testing"', $commands[1]);
+        $this->assertStringContainsString('-m "project=helio-platform"', $commands[1]);
+        $this->assertStringContainsString('-m "user.email={{ email }}"', $commands[1]);
+        $this->assertStringContainsString('-m "user.name={{ name }}"', $commands[1]);
     }
 }
