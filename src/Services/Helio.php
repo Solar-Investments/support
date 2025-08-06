@@ -49,7 +49,6 @@ class Helio
         $project = Env::get('GCP_PROJECT_ID', 'helio-platform');
 
         $config->set('statamic.git.commands', [
-            '{{ git }} pull',
             '{{ git }} add {{ paths }}',
             collect([
                 '{{ git }}',
