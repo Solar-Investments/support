@@ -59,7 +59,7 @@ class HelioServiceProviderTest extends TestCase
 
         $this->assertIsArray($commands);
         $this->assertCount(3, $commands);
-        $this->assertSame('{{ git }} pull', $commands[0]);
+        $this->assertSame('{{ git }} pull --autostash --rebase', $commands[0]);
         $this->assertSame('{{ git }} add {{ paths }}', $commands[1]);
         $this->assertStringContainsString('-c user.name="{{ name }}"', $commands[2]);
         $this->assertStringContainsString('-c user.email="{{ email }}"', $commands[2]);
